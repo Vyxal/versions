@@ -47,7 +47,7 @@ jobs:
 
         
       - name: Build the sub-version
-        run: cd ${{github.event.client_payload.tag}}; npm run build
+        run: cd ${{github.event.client_payload.tag}}; npm run build; ls
         env:
           NODE_ENV: "production"
           
