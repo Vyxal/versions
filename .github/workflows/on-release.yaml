@@ -21,10 +21,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-          
-      - uses: actions/checkout@v4
-        with:
-          ref: hub
         
       - name: Download files to release folder
         run: | 
