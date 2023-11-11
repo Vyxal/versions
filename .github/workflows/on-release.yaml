@@ -59,6 +59,12 @@ jobs:
       - name: Download external js
         run: python helpers/download_files.py "${{toJSON(github.event.client_payload.files)}}" ${{github.event.client_payload.tag}}
 
+      - name: Move all files in COMPILED_FILES up a level & delete COMPILED_FILES dir
+        run: |
+          cd ${{github.event.client_payload.tag}}
+          mv COMPILED_FILES/* COMPILED_FILES/.* .
+          rm -rf COMPILED_FILES
+
           
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
