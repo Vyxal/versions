@@ -43,7 +43,7 @@ jobs:
           node-version: 19
 
       - name: Install dependencies
-        run: npm install
+        run: cd ${{github.event.client_payload.tag}}; npm install
 
         
       - name: Build the sub-version
