@@ -22,13 +22,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         
-      - name: Download files to release folder
+      - name: Create release directory & clone vyxal.github.io into it
         run: | 
           python -m pip install --upgrade pip
           python -m pip install requests
           mkdir ${{github.event.client_payload.tag}}
           git clone https://github.com/Vyxal/vyxal.github.io.git ${{github.event.client_payload.tag}}
-          python helpers/download_files.py "${{toJSON(github.event.client_payload.files)}}" ${{github.event.client_payload.tag}}
           cd ${{github.event.client_payload.tag}}
           rm -rfd .git
 
@@ -50,6 +49,16 @@ jobs:
         run: cd ${{github.event.client_payload.tag}}; npm run build; mv dist COMPILED_FILES
         env:
           NODE_ENV: "production"
+
+      - name: Delete everything that isnt COMPILED_FILES
+        run: |
+          cd ${{github.event.client_payload.tag}}
+          GLOBIGNORE="COMPILED_FILES"
+          rm -rf *
+
+      - name: Download external js
+        run: python helpers/download_files.py "${{toJSON(github.event.client_payload.files)}}" ${{github.event.client_payload.tag}}
+
           
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
