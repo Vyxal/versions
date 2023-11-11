@@ -32,9 +32,27 @@ jobs:
           cd ${{github.event.client_payload.tag}}
           rm -rfd .git
 
-      
       - name: Overwrite config.js
         run: python helpers/create_config.py ${{github.event.client_payload.tag}}
+
+      # Begin the build process
+
+      - name: Set up Node.js 19
+        uses: actions/setup-node@v3
+        with:
+          node-version: 19
+
+      - name: Install dependencies
+        run: npm install
+
+        
+      - name: Build the sub-version
+        run: npm run build
+        env:
+          NODE_ENV: "production"
           
       - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Push new version files.
+        
       
