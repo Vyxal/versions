@@ -14,7 +14,7 @@ export default defineConfig({
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
-  base: "/%s"
+  base: "versions/%s"
 });"""
 
 if __name__ == "__main__":
