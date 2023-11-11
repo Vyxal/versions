@@ -21,12 +21,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      #- name: Set up JDK 17
-      #  uses: actions/setup-java@v3
-      #  with:
-      #    java-version: "17"
-      #    distribution: "adopt"
           
       - uses: actions/checkout@v4
         with:
@@ -38,7 +32,7 @@ jobs:
           python -m pip install requests
           mkdir ${{github.event.client_payload.tag}}
           git clone https://github.com/Vyxal/vyxal.github.io.git ${{github.event.client_payload.tag}}
-          python file_funcs.py "${{toJSON(github.event.client_payload.files)}}" ${{github.event.client_payload.tag}}
+          python helpers/download_files.py "${{toJSON(github.event.client_payload.files)}}" ${{github.event.client_payload.tag}}
           cd ${{github.event.client_payload.tag}}
           rm -rfd .git
           
@@ -56,6 +50,10 @@ deploy:
 
       - name: Setup Pages
         uses: actions/configure-pages@v2
+
+
+      - name: Overwrite config.js
+        run: python helpers/create_config.py ${{github.event.client_payload.tag}}
 
       - name: Set up Node.js 19
         uses: actions/setup-node@v3
