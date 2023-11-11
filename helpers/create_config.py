@@ -19,5 +19,5 @@ export default defineConfig({
 
 if __name__ == "__main__":
   new_base = sys.argv[1]
-  with open("vite.config.ts", "w") as f:
+  with open(new_base + "/vite.config.ts", "w") as f:
     f.write(TEMPLATE_STRING % new_base)
