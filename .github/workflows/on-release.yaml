@@ -62,7 +62,8 @@ jobs:
       - name: Move all files in COMPILED_FILES up a level & delete COMPILED_FILES dir
         run: |
           cd ${{github.event.client_payload.tag}}
-          mv COMPILED_FILES/* COMPILED_FILES/.* .
+          mv COMPILED_FILES/* .
+          mv COMPILED_FILES/.* .
           rm -rf COMPILED_FILES
 
           
