@@ -41,6 +41,9 @@ jobs:
       - name: Overwrite config.js
         run: python helpers/create_config.py ${{github.event.client_payload.tag}}
 
+      - name: Overwrite worker.js
+        run: python helpers/create_worker.py
+
       # Begin the build process
 
       - name: Set up Node.js 19
