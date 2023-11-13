@@ -1,3 +1,5 @@
+import sys
+
 TEMPLATE_STRING = """import { Vyxal } from "./vyxal.js";
 
 
@@ -16,5 +18,6 @@ self.addEventListener("message", function (e) {
 """
 
 if __name__ == "__main__":
-  with open("worker.js", "w") as f:
+  new_base = sys.argv[1]
+  with open(new_base + "/src/worker.js", "w") as f:
     f.write(TEMPLATE_STRING)
