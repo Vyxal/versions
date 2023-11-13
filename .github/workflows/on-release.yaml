@@ -42,7 +42,7 @@ jobs:
         run: python helpers/create_config.py ${{github.event.client_payload.tag}}
 
       - name: Overwrite worker.js
-        run: python helpers/create_worker.py
+        run: python helpers/create_worker.py ${{github.event.client_payload.tag}}
 
       # Begin the build process
 
