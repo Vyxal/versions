@@ -38,13 +38,17 @@ jobs:
           cd ${{github.event.client_payload.tag}}
           rm -rfd .git
 
+      - name: Delete landing page version of index.html
+        run: cd ${{github.event.client_payload.tag}}; rm index.html
+
+      - name: Rename latest.html to index.html
+        run: mv ${{github.event.client_payload.tag}}/latest.html ${{github.event.client_payload.tag}}/index.html
+
       - name: Overwrite worker.js
         run: python helpers/create_worker.py ${{github.event.client_payload.tag}}
 
-      - name: Build the sub-version
-        run: cd ${{github.event.client_payload.tag}}; npm run build; mv dist COMPILED_FILES
-        env:
-          NODE_ENV: "production"
+      - name: Update versions.json
+        run: python helpers/update_versions_files.py ${{github.event.client_payload.tag}}
 
       - name: Download external js
         run: python helpers/download_files.py "${{toJSON(github.event.client_payload.files)}}" ${{github.event.client_payload.tag}}
