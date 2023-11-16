@@ -18,5 +18,5 @@ self.addEventListener('message', function (e) {
 
 if __name__ == "__main__":
   new_base = sys.argv[1]
-  with open(new_base + "/src/worker.js", "w") as f:
+  with open(new_base + "/worker.js", "w") as f:
     f.write(TEMPLATE_STRING)
