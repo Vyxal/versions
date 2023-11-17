@@ -54,7 +54,9 @@ jobs:
         run: python helpers/download_files.py ${{toJSON(github.event.client_payload.files)}} ${{github.event.client_payload.tag}}
 
       - name: Download parsed_yaml.js from vyxal.github.io/pages/parsed_yaml.js
-        run: curl https://vyxal.github.io/Vyxal/parsed_yaml.js >> parsed_yaml.js
+        run: |
+          curl https://vyxal.github.io/Vyxal/parsed_yaml.js >> parsed_yaml.js
+          mv parsed_yaml.js  ${{github.event.client_payload.tag}}
           
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
