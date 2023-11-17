@@ -57,6 +57,11 @@ jobs:
         run: |
           curl https://vyxal.github.io/Vyxal/parsed_yaml.js >> parsed_yaml.js
           mv parsed_yaml.js  ${{github.event.client_payload.tag}}
+
+      - name: Finally, replace the imports in the files
+        run: |
+          cd ${{github.event.client_payload.tag}}
+          python ../helpers/overwrite_imports.py
           
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
