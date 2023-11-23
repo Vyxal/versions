@@ -124,7 +124,7 @@ function shareOptions(shareType) {
                 code = Vyxal.getSBCSified(code)
                 len = code.length
             }
-            output = `# [Vyxal 3](https://github.com/Vyxal/Vyxal/tree/version-3)${flagAppendage} ${len} byte${"s".repeat(len != 1)}${utfable ? '' : ' (UTF-8)'}
+            output = `# [Vyxal 3](https://github.com/Vyxal/Vyxal/tree/version-3)${flagAppendage}, ${len} byte${"s".repeat(len != 1)}${utfable ? '' : ' (UTF-8)'}
 \`\`\`
 ${code}
 \`\`\`
@@ -144,7 +144,7 @@ ${code}
 function decodeURL() {
     var [flags, header, code, footer, inputs, version] = decode(window.location.hash.substring(1));
 
-    if (version !== undefined && true) { //incomptabile(version, "3.0.0")) {
+    if (version !== undefined && incomptabile(version, "3.0.0")) {
         window.location.href = `https://vyxal.github.io/versions/v${version}/#${window.location.hash.substring(1)}`
     }
 
