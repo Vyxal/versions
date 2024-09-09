@@ -29,40 +29,41 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v2
         
-      - name: Create release directory & clone vyxal.github.io into it
+      - name: Clone vyxal.github.io
         run: | 
-          python -m pip install --upgrade pip
-          python -m pip install requests
-          mkdir ${{github.event.client_payload.tag}}
-          git clone https://github.com/Vyxal/vyxal.github.io.git ${{github.event.client_payload.tag}}
-          cd ${{github.event.client_payload.tag}}
+          git clone https://github.com/Vyxal/vyxal.github.io.git
+          cd vyxal.github.io
           rm -rfd .git
 
-      - name: Delete landing page version of index.html
-        run: cd ${{github.event.client_payload.tag}}; rm index.html
+      - name: Install build dependencies
+        run: npm install
 
-      - name: Rename latest.html to index.html
-        run: mv ${{github.event.client_payload.tag}}/latest.html ${{github.event.client_payload.tag}}/index.html
+      - name: Compile in archive mode
+        run: npx webpack --mode production --env vy-archive=vyxal --progress
 
-      - name: Overwrite worker.js
-        run: python helpers/create_worker.py ${{github.event.client_payload.tag}}
+      - name: Clone the Vyxal repository
+        run: |
+          git clone https://github.com/Vyxal/Vyxal.git -b ${{github.event.client_payload.tag}}
+          cd Vyxal
+          rm -rfd .git
+
+      - name: Compile Vyxal
+        run: ./mill js.fullLinkJS
+
+      - name: Generate theseus data
+        run: ./mill jvm.theseus
+
+      - name: Move everything into the right places
+        run: |
+          cd ..
+          mv -v Vyxal/pages/ dist/vyxal
+          cd ..
+          mv vyxal.github.io/dist/ ./${{github.event.client_payload.tag}}
+          rm -rfd vyxal.github.io
 
       - name: Update versions.json
         run: python helpers/update_versions_files.py ${{github.event.client_payload.tag}}
 
-      - name: Download external js from dispatch
-        run: python helpers/download_files.py ${{toJSON(github.event.client_payload.files)}} ${{github.event.client_payload.tag}}
-
-      - name: Download parsed_yaml.js from vyxal.github.io/pages/parsed_yaml.js
-        run: |
-          curl https://vyxal.github.io/Vyxal/parsed_yaml.js >> parsed_yaml.js
-          mv parsed_yaml.js  ${{github.event.client_payload.tag}}
-
-      - name: Finally, replace the imports in the files
-        run: |
-          cd ${{github.event.client_payload.tag}}
-          python ../helpers/overwrite_imports.py
-          
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: Push new version files.
