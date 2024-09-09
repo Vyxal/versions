@@ -36,34 +36,31 @@ jobs:
           distribution: "adopt"
         
       - name: Clone vyxal.github.io
-        run: | 
-          git clone https://github.com/Vyxal/vyxal.github.io.git
-          cd vyxal.github.io
-          rm -rfd .git
+        run: git clone https://github.com/Vyxal/vyxal.github.io.git
 
       - name: Install build dependencies
+        working-directory: ./vyxal.github.io
         run: npm install
 
       - name: Compile in archive mode
+        working-directory: ./vyxal.github.io
         run: npx webpack --mode production --env vy-archive=vyxal --progress
 
       - name: Clone the Vyxal repository
-        run: |
-          git clone https://github.com/Vyxal/Vyxal.git -b ${{github.event.client_payload.tag}}
-          cd Vyxal
-          rm -rfd .git
-
+        working-directory: ./vyxal.github.io
+        run: git clone https://github.com/Vyxal/Vyxal.git -b ${{github.event.client_payload.tag}}
+        
       - name: Compile Vyxal
+        working-directory: ./vyxal.github.io/Vyxal/
         run: ./mill js.fullLinkJS
 
       - name: Generate theseus data
+        working-directory: ./vyxal.github.io/Vyxal/
         run: ./mill jvm.theseus
 
       - name: Move everything into the right places
         run: |
-          cd ..
-          mv -v Vyxal/pages/ dist/vyxal
-          cd ..
+          mv -v vyxal.github.io/Vyxal/pages/ vyxal.github.io/dist/vyxal
           mv vyxal.github.io/dist/ ./${{github.event.client_payload.tag}}
           rm -rfd vyxal.github.io
 
