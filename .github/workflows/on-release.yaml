@@ -60,7 +60,7 @@ jobs:
 
       - name: Move everything into the right places
         run: |
-          mv -v vyxal.github.io/Vyxal/pages/ vyxal.github.io/dist/vyxal
+          mv -v vyxal.github.io/Vyxal/pages/ vyxal.github.io/dist/scripts/vyxal
           mv vyxal.github.io/dist/ ./${{github.event.client_payload.tag}}
           rm -rfd vyxal.github.io
 
